@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchPopularMovies } from "../axios/axiosApi";
+import { fetchMovieByGenre } from "../axios/axiosApi";
 import Sidebar from "./Sidebar";
 import SearchBar from "./SearchBar";
 import Pagination from "./Pagination";
@@ -16,12 +16,17 @@ const Movies: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
+  const handleGenreSelect = (genre: string | null) => {
+    setSelectedGenre(genre);
+  }
   useEffect(() => {
     const loadMovies = async () => {
       setLoading(true);
       try {
-        const data = await fetchPopularMovies();
+        const data = await fetchMovieByGenre(selectedGenre as string, page);
         let movieResults = data.results || [];
 
         if (selectedGenre) {
@@ -31,6 +36,7 @@ const Movies: React.FC = () => {
         }
 
         setMovies(movieResults);
+        setTotalPages(data.totalPages || 0);
       } catch (error) {
         console.error("Failed to fetch movies:", error);
       } finally {
@@ -39,18 +45,39 @@ const Movies: React.FC = () => {
     };
 
     loadMovies();
-  }, [selectedGenre]);
+  }, [selectedGenre, page]);
+  useEffect(() => {
+    const loadMovies = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchMovieByGenre(selectedGenre as string, page); 
+        const movieResults = data.results || [];
+        setMovies(movieResults);
+      } catch (error) {
+        console.error("Failed to fetch movies:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    loadMovies();
+  }, [selectedGenre, page]);
+  const handleSearch = (query: string) => {
+    const filteredMovies = movies.filter((movie) =>
+      movie.titleText.text.toLowerCase().includes(query.toLowerCase())
+    );
+    setMovies(filteredMovies);
+  };
   return (
     <>
-      <SearchBar onSearch={(query) => console.log("Search query:", query)} />
+      <SearchBar onSearch={(query) => handleSearch(query)}  />
       <div className="flex flex-col md:flex-row min-h-screen pt-24 bg-[#141113] ">
         <div className="w-full md:w-1/4 sticky top-10">
           <Sidebar selectedGenre={selectedGenre} onSelectGenre={setSelectedGenre} />
         </div>
 
         <main className="flex-1 p-4 lg:ml-[-80px]">
-          <h1 className="text-white font-extrabold text-2xl py-2">Popular Movies</h1>
+          <h1 className="text-white font-extrabold text-2xl py-2">Movies</h1>
 
           {loading ? (
             <p className="text-white">Loading...</p>
@@ -76,7 +103,7 @@ const Movies: React.FC = () => {
               ))}
             </div>
           )}
-          <Pagination />  
+          <Pagination onPageChange={setPage} currentPage={page} totalPages={5}/>  
         </main>
       </div>
     </>
@@ -84,3 +111,4 @@ const Movies: React.FC = () => {
 };
 
 export default Movies;
+

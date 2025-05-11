@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchGenres } from '../axios/axiosApi';
+import { fetchMovieGenres } from '../axios/axiosApi';
 import { Menu, X } from 'lucide-react';
 
 interface Genre {
@@ -12,18 +12,18 @@ interface SidebarProps {
   onSelectGenre: (genre: string | null) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ selectedGenre }) => {
+const Sidebar: React.FC<SidebarProps> = ({ selectedGenre, onSelectGenre }) => {
   const [genres, setGenres] = useState<Genre[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const loadGenres = async () => {
-      const data = await fetchGenres();
+      // const data = await fetchGenres();
+      const data = await fetchMovieGenres();
       setGenres(data);
     };
     loadGenres();
   }, []);
-
 
 
   return (
@@ -43,14 +43,22 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedGenre }) => {
       >
         <div className='text-white'>
           <h2 className="text-lg font-semibold mb-4 pt-11">Genres</h2>
-          <div className="space-y-2">
+          <div className="space-y-1">
             {genres.length === 0 ? (
-              <div className="text-sm text-gray-400">Loading genres...</div>
+              <div className="text-gray-400">Loading genres...</div>
             ) : (
               genres.map((genre) => (
                 <label
                   key={genre.id}
-                  className="flex items-center space-x-2 cursor-pointer text-sm"
+                  className="flex items-center space-x-2 cursor-pointer text-bold text-xs"
+                  onClick={() => {
+                    if (selectedGenre === genre.name) {
+                      
+                      onSelectGenre(null);
+                    } else {
+                      onSelectGenre(genre.name);
+                    }
+                  }}
                 >
                   <span className={selectedGenre === genre.name ? 'font-bold' : ''}>
                     {genre.name}

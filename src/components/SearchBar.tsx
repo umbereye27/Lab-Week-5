@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import 'boxicons'
+import { SearchIcon } from "lucide-react";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
   initialQuery?: string;
+  handleGenreSelected?: (genre: string | null) => void;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -11,6 +12,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   initialQuery = "",
 }) => {
   const [query, setQuery] = useState<string>(initialQuery);
+ 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className="search-bar">
       <form onSubmit={handleSubmit}>
-        <header className="flex flex-col md:flex-row  gap-3  md:gap-0 md:justify-between items-center px-4 py-3 text-white fixed top-0 left-0 w-full z-50 bg-[#1a1d24]">
+        <header className="flex flex-col md:flex-row gap-3  md:gap-0 md:justify-between items-center px-4 py-3 text-white fixed top-0 left-0 w-full z-50 bg-[#1a1d24]">
       
           <div className="flex items-center text-2xl font-bold">
             <span className="text-3xl text-gray-400 mr-2">🎬</span>
@@ -29,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
           <div className="relative w-full max-w-md md:mx-4">
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-              🔍
+            <SearchIcon strokeWidth={1} className="w-8 h-8 px-2" />
             </span>
             <input
               type="text"
@@ -41,7 +43,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           </div>
 
         
-          <button
+          <button {...onSearch}
             type="submit"
             className="px-5 py-2 rounded text-white bg-[#242830] text-base cursor-pointer mt-2 md:mt-0"
           >
