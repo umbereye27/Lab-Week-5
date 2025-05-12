@@ -1,8 +1,9 @@
 import axios from 'axios';
-import type { Genre } from '../common/types';
+import type { Genre } from '../type/types';
 
-const API_KEY = '2773656ba3msh7c9f369cad28bc3p1911f6jsn24fbbd49e8b2'; 
-const API_HOST = 'moviesdatabase.p.rapidapi.com';
+
+const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;
+const API_HOST = import.meta.env.VITE_REACT_APP_API_HOST;
 
 export const API = axios.create({
   baseURL: `https://${API_HOST}/`,
@@ -12,20 +13,10 @@ export const API = axios.create({
   },
 })
 
-// API.interceptors.response.use(
-//   (response) => {
-//     // console.log('API Responseeeeeeeeeee:', response.data.results[0]);
-//     return response;
-  
-//   },
-//   (error) => {
-//     console.error('API Error:', error.response?.data || error.message);
-//     return Promise.reject(error);
-//   }
-// );
 
 export const fetchMovieByGenre = async (genre ="All", 
   page = 1) => {
+
   try {
   
     const response = await API.get('titles', {
@@ -37,10 +28,9 @@ export const fetchMovieByGenre = async (genre ="All",
       },
     });
 
-    // console.log("LENGS======>", response.data.results.length);
     return response.data;
   } catch (error) {
-    // console.error('Error fetching movies:', error);
+
     throw error;
   }
 };
@@ -57,17 +47,3 @@ export const fetchMovieGenres =  async (): Promise<Genre[]> => {
     throw error;
   }
 }
-// export const fetchMoviesByGenre = async (genre: string, page = 1) => {
-//   try {
-//     const response = await API.get('titles', {
-//       params: {
-//         genre,
-//         page,
-//       },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching movies by genre:', error);
-//     throw error;
-//   }
-// }

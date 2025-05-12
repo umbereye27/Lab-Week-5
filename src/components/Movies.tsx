@@ -3,14 +3,8 @@ import { fetchMovieByGenre } from "../axios/axiosApi";
 import Sidebar from "./Sidebar";
 import SearchBar from "./SearchBar";
 import Pagination from "./Pagination";
+import  type {Movie}  from "../type/types"
 
-interface Movie {
-  id: string;
-  titleText: { text: string };
-  releaseYear?: { year: number };
-  primaryImage?: { url: string };
-  genres?: { genres: { text: string }[] };
-}
 
 const Movies: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
