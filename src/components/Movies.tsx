@@ -13,9 +13,7 @@ const Movies: React.FC = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const handleGenreSelect = (genre: string | null) => {
-    setSelectedGenre(genre);
-  }
+
   useEffect(() => {
     const loadMovies = async () => {
       setLoading(true);
@@ -30,7 +28,7 @@ const Movies: React.FC = () => {
         }
 
         setMovies(movieResults);
-        setTotalPages(data.totalPages || 0);
+        setTotalPages(data.totalPages || 5);
       } catch (error) {
         console.error("Failed to fetch movies:", error);
       } finally {
@@ -97,7 +95,7 @@ const Movies: React.FC = () => {
               ))}
             </div>
           )}
-          <Pagination onPageChange={setPage} currentPage={page} totalPages={5}/>  
+         <Pagination onPageChange={setPage} currentPage={page} totalPages={totalPages} /> 
         </main>
       </div>
     </>
