@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMovieGenres } from '../axios/axiosApi';
 import { Menu, X } from 'lucide-react';
-
-interface Genre {
-  id: number;
-  name: string;
-}
+import type { Genre } from '../type/types';
 
 interface SidebarProps {
   selectedGenre: string | null;
@@ -18,7 +14,6 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedGenre, onSelectGenre }) => {
 
   useEffect(() => {
     const loadGenres = async () => {
-      // const data = await fetchGenres();
       const data = await fetchMovieGenres();
       setGenres(data);
     };

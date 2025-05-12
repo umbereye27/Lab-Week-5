@@ -1,9 +1,5 @@
 
-interface PaginationProps {
-    totalPages: number;
-    currentPage: number;
-    onPageChange: (page: number) => void;
-}
+import type { PaginationProps } from "../type/types";
 
 const Pagination = ({onPageChange, currentPage, totalPages}: PaginationProps) => {
     // const [setDisplayPage, setDisplayPage] = useState<boolean>();
